@@ -15,59 +15,55 @@ namespace ReenDocsAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Person>>> Get()
+        public async Task<ActionResult<List<Role>>> Get()
         {
-            return Ok(await _context.People.ToListAsync());
+            return Ok(await _context.Roles.ToListAsync());
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Person>> Get(int id)
+        public async Task<ActionResult<Role>> Get(int id)
         {
-            var hero = await _context.People.FindAsync(id);
-            if (hero == null)
-                return BadRequest("Person not found.");
-            return Ok(hero);
+            var role = await _context.Roles.FindAsync(id);
+            if (role == null)
+                return BadRequest("Role not found.");
+            return Ok(role);
         }
 
         [HttpPost]
-        public async Task<ActionResult<List<Person>>> AddPerson(Person person)
+        public async Task<ActionResult<List<Role>>> AddRole(Role Role)
         {
-            _context.People.Add(person);
+            _context.Roles.Add(Role);
             await _context.SaveChangesAsync();
 
-            return Ok(await _context.People.ToListAsync());
+            return Ok(await _context.Roles.ToListAsync());
         }
 
         [HttpPut]
-        public async Task<ActionResult<List<Person>>> UpdateHero(Person newPerson)
+        public async Task<ActionResult<List<Role>>> UpdateHero(Role newRole)
         {
-            var dbPerson = await _context.People.FindAsync(newPerson.Id);
-            if (dbPerson == null)
-                return BadRequest("Person not found.");
+            var dbRole = await _context.Roles.FindAsync(newRole.Id);
+            if (dbRole == null)
+                return BadRequest("Role not found.");
 
-            dbPerson.FullName = newPerson.FullName;
-            dbPerson.Email = newPerson.Email;
-            dbPerson.Photo = newPerson.Photo;
-            dbPerson.Phone = newPerson.Phone;
-            dbPerson.PositionId = newPerson.PositionId;
-            dbPerson.DepartmentId = newPerson.DepartmentId;
+            dbRole.Name = newRole.Name;
+            dbRole.Access = newRole.Access;
 
             await _context.SaveChangesAsync();
 
-            return Ok(await _context.People.ToListAsync());
+            return Ok(await _context.Roles.ToListAsync());
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<List<Person>>> Delete(int id)
+        public async Task<ActionResult<List<Role>>> Delete(int id)
         {
-            var dbPeople = await _context.People.FindAsync(id);
-            if (dbPeople == null)
+            var dbRoles = await _context.Roles.FindAsync(id);
+            if (dbRoles == null)
                 return BadRequest("Hero not found.");
 
-            _context.People.Remove(dbPeople);
+            _context.Roles.Remove(dbRoles);
             await _context.SaveChangesAsync();
 
-            return Ok(await _context.People.ToListAsync());
+            return Ok(await _context.Roles.ToListAsync());
         }
 
     }
