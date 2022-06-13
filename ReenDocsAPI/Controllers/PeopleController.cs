@@ -37,24 +37,27 @@ namespace ReenDocsAPI.Controllers
 
             return Ok(await _context.People.ToListAsync());
         }
-
+       
         [HttpPut]
-        public async Task<ActionResult<List<Person>>> UpdatePerson(Person newPerson)
+        public async Task<ActionResult<List<Person>>> UpdatePerson(int id)
         {
-            var dbPerson = await _context.People.FindAsync(newPerson.Id);
-            if (dbPerson == null)
-                return BadRequest("Person not found.");
+            var dbPeople = await _context.People.FindAsync(id);
 
-            dbPerson.FullName = newPerson.FullName;
-            dbPerson.Email = newPerson.Email;
-            dbPerson.Photo = newPerson.Photo;
-            dbPerson.Phone = newPerson.Phone;
-            dbPerson.PositionId = newPerson.PositionId;
-            dbPerson.DepartmentId = newPerson.DepartmentId;
+            if (dbPeople == null)
+                return BadRequest("User not found.");
+            var username = dbPeople.FullName.Split(" ");
+            var newUser = new User()
+            {
+                UserName = (username[0] + "123456"),
+                Password = "123456"
+            };
 
+            var user = _context.Users.Add(newUser);
             await _context.SaveChangesAsync();
-
+            dbPeople.UserId = user.Entity.Id;
+            await _context.SaveChangesAsync();
             return Ok(await _context.People.ToListAsync());
+
         }
 
         [HttpDelete("{id}")]
