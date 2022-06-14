@@ -38,7 +38,7 @@ namespace ReenDocsAPI.Controllers
             return Ok(await _context.People.ToListAsync());
         }
        
-        [HttpPut]
+        [HttpPut("{id}")]
         public async Task<ActionResult<List<Person>>> UpdatePerson(int id)
         {
             var dbPeople = await _context.People.FindAsync(id);
