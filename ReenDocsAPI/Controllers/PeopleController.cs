@@ -17,7 +17,21 @@ namespace ReenDocsAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Person>>> Get()
         {
-            return Ok(await _context.People.ToListAsync());
+            var query = from person in _context.People
+                        join departmen in _context.Departments on person.DepartmentId equals departmen.Id
+                        select new
+                        {
+                            person.Id,
+                            person.FullName,
+                            person.Photo,
+                            person.UserId,
+                            person.PositionId,
+                            departmen.Name
+                        };
+
+            var result = await query.ToListAsync();
+            return Ok(result);
+            //return Ok(await _context.People.ToListAsync());
         }
 
         [HttpGet("{id}")]
@@ -37,9 +51,24 @@ namespace ReenDocsAPI.Controllers
 
             return Ok(await _context.People.ToListAsync());
         }
-       
+        [HttpPut("updatePeople/{id}")]
+        public async Task<ActionResult<List<Person>>> updatePeople(int id ,[FromBody]Person person)
+        {
+            var dbPeople = await _context.People.FindAsync(id);
+            if (dbPeople == null)
+                return BadRequest("User not found.");
+            dbPeople.FullName = person.FullName;
+            dbPeople.DepartmentId = person.DepartmentId;
+            dbPeople.PositionId = person.PositionId;
+            dbPeople.Email = person.Email;
+            dbPeople.Phone = person.Phone;
+            dbPeople.Photo = person.Photo;
+            await _context.SaveChangesAsync();
+            return Ok("Update Success");
+
+        }
         [HttpPut("{id}")]
-        public async Task<ActionResult<List<Person>>> UpdatePerson(int id)
+        public async Task<ActionResult<List<Person>>> setToUser(int id)
         {
             var dbPeople = await _context.People.FindAsync(id);
 
