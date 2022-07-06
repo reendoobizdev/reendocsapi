@@ -2,7 +2,7 @@
 {
     public class Person
     {
-        public int Id { get; set; }
+        public int? Id { get; set; } = null;
         public int DepartmentId { get; set; }
         public int PositionId { get; set; }
         public int ? UserId { get; set; } = null;
